@@ -22,7 +22,9 @@ export default {
       "https://baggyrepackingrocky.com/2022576";
 
     const imageUrl =
-      `${url.origin}/${imageNumber}.png`;
+  imageNumber === 1
+    ? "https://i.imgur.com/W5PEFru.jpeg"
+    : `${url.origin}/${imageNumber}.png`;
 
     const title = "69:07";
     const description = "Check out this amazing content!";
