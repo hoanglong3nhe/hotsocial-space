@@ -2,22 +2,31 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
 
+    // =========================
+    // CẤU HÌNH
+    // =========================
     const MAX_IMAGES = 2040;
 
-    // Link đích riêng của hotsocial.space
     const REDIRECT_URL =
       "https://baggyrepackingrocky.com/2022576";
 
-    // Ảnh trực tiếp:
+    // =========================
+    // 1. MỞ ẢNH TRỰC TIẾP
+    // /1.jpg
     // /1.png
+    // /2.jpg
     // /2.png
-    // ...
-    const imageMatch = url.pathname.match(/^\/(\d+)\.png$/);
+    // =========================
+    const imageMatch =
+      url.pathname.match(/^\/(\d+)\.(jpg|png)$/i);
 
     if (imageMatch) {
       const imageNumber = Number(imageMatch[1]);
 
-      if (imageNumber < 1 || imageNumber > MAX_IMAGES) {
+      if (
+        imageNumber < 1 ||
+        imageNumber > MAX_IMAGES
+      ) {
         return new Response("Not found", {
           status: 404
         });
@@ -26,10 +35,12 @@ export default {
       return env.ASSETS.fetch(request);
     }
 
-    // Card:
+    // =========================
+    // 2. CARD PAGE
     // /api/anh1
     // /api/anh2
     // ...
+    // =========================
     const cardMatch =
       url.pathname.match(/^\/api\/anh(\d+)$/);
 
@@ -41,12 +52,22 @@ export default {
 
     let imageNumber = Number(cardMatch[1]);
 
-    if (imageNumber < 1 || imageNumber > MAX_IMAGES) {
+    if (
+      imageNumber < 1 ||
+      imageNumber > MAX_IMAGES
+    ) {
       imageNumber = 3;
     }
 
+    // =========================
+    // 3. ƯU TIÊN JPG
+    // Nếu bạn upload ảnh mới:
+    // public/1.jpg
+    // public/2.jpg
+    // ...
+    // =========================
     const imageUrl =
-      `${url.origin}/${imageNumber}.png`;
+      `${url.origin}/${imageNumber}.jpg`;
 
     const pageUrl =
       `${url.origin}/api/anh${imageNumber}`;
@@ -56,6 +77,9 @@ export default {
     const description =
       "Check out this amazing content!";
 
+    // =========================
+    // 4. HTML CARD
+    // =========================
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
